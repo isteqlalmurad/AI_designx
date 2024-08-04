@@ -1,0 +1,234 @@
+<html><head><base href="https://websimengine.com/creative-space/" /><title>Creative Space - Inspiring Process Design</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #ffffff;
+    overflow: hidden;
+}
+.container {
+    display: flex;
+    height: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+    box-sizing: border-box;
+}
+.chat-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    margin: 0 10px;
+    position: relative;
+    overflow: hidden;
+}
+.chat-window {
+    flex-grow: 1;
+    background-color: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 20px;
+    overflow-y: auto;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    margin-bottom: 20px;
+}
+.input-area {
+    display: flex;
+    margin-bottom: 20px;
+}
+#user-input {
+    flex-grow: 1;
+    padding: 15px 25px;
+    border: none;
+    border-radius: 30px;
+    font-size: 16px;
+    background-color: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+#user-input::placeholder {
+    color: rgba(255, 255, 255, 0.7);
+}
+#user-input:focus {
+    outline: none;
+    background-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+}
+#send-button {
+    margin-left: 10px;
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #FF6B6B, #FF8E53);
+    color: white;
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.4);
+}
+#send-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.6);
+}
+.message {
+    margin-bottom: 15px;
+    padding: 12px 18px;
+    border-radius: 18px;
+    max-width: 80%;
+    line-height: 1.4;
+    animation: fadeIn 0.5s ease-out;
+}
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.user-message {
+    background: linear-gradient(135deg, #00C9FF 0%, #92FE9D 100%);
+    color: #1d1d1f;
+    align-self: flex-end;
+    margin-left: auto;
+}
+.bot-message {
+    background: linear-gradient(135deg, #E55D87 0%, #5FC3E4 100%);
+    color: white;
+    align-self: flex-start;
+}
+.comment-message {
+    background: linear-gradient(135deg, #FDEB71 0%, #F8D800 100%);
+    color: #1d1d1f;
+    font-style: italic;
+    align-self: flex-start;
+}
+h2 {
+    font-weight: 600;
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: #ffffff;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+}
+.inspiration-bubble {
+    position: absolute;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: float 8s infinite ease-in-out;
+}
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="chat-column">
+        <h2>Idea Generator</h2>
+        <div id="chat-window" class="chat-window"></div>
+        <div class="input-area">
+            <input type="text" id="user-input" placeholder="Share your creative thoughts...">
+            <button id="send-button">Inspire</button>
+        </div>
+    </div>
+    <div class="chat-column">
+        <h2>Insight Reflector</h2>
+        <div id="comment-window" class="chat-window"></div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    const chatWindow = $('#chat-window');
+    const commentWindow = $('#comment-window');
+    const userInput = $('#user-input');
+    const sendButton = $('#send-button');
+
+    function addMessage(message, type) {
+        const messageElement = $('<div>').addClass('message').addClass(type).text(message);
+        chatWindow.append(messageElement);
+        chatWindow.scrollTop(chatWindow[0].scrollHeight);
+    }
+
+    function addComment(comment) {
+        const commentElement = $('<div>').addClass('message').addClass('comment-message').text(comment);
+        commentWindow.append(commentElement);
+        commentWindow.scrollTop(commentWindow[0].scrollHeight);
+    }
+
+    function chatbotResponse(message) {
+        const responses = [
+            "That's a brilliant spark! How might we fan this flame of creativity?",
+            "Fascinating concept! Let's dive deeper - what hidden connections do you see?",
+            "You're onto something unique here. How could we push this idea to its limits?",
+            "Intriguing perspective! How might this reshape the landscape of your process?",
+            "That's thinking outside the box! What wild possibilities does this open up?"
+        ];
+        return responses[Math.floor(Math.random() * responses.length)];
+    }
+
+    function commentBotResponse(message) {
+        const comments = [
+            "A seed of innovation has been planted. Let's see how it grows...",
+            "This idea seems to be challenging conventional wisdom. Exciting!",
+            "I sense a paradigm shift in the making. The possibilities are endless.",
+            "This concept could be the key to unlocking new potentials in the process.",
+            "The synergy between user and AI is producing some truly inspired thinking."
+        ];
+        return comments[Math.floor(Math.random() * comments.length)];
+    }
+
+    sendButton.click(function() {
+        const message = userInput.val().trim();
+        if (message) {
+            addMessage(message, 'user-message');
+            userInput.val('');
+
+            setTimeout(() => {
+                const response = chatbotResponse(message);
+                addMessage(response, 'bot-message');
+
+                setTimeout(() => {
+                    const comment = commentBotResponse(message);
+                    addComment(comment);
+                }, 1000);
+            }, 1000);
+        }
+    });
+
+    userInput.keypress(function(e) {
+        if (e.which == 13) {
+            sendButton.click();
+        }
+    });
+
+    function createInspirationBubbles() {
+        const bubbleCount = 15;
+        const container = $('.container');
+        for (let i = 0; i < bubbleCount; i++) {
+            const size = Math.random() * 50 + 10;
+            const bubble = $('<div>').addClass('inspiration-bubble').css({
+                width: size + 'px',
+                height: size + 'px',
+                left: Math.random() * 100 + '%',
+                top: Math.random() * 100 + '%',
+                animationDelay: (Math.random() * 8) + 's'
+            });
+            container.append(bubble);
+        }
+    }
+
+    createInspirationBubbles();
+
+    addMessage("Welcome to your Creative Oasis! Let your imagination run wild and share your most innovative ideas for process design.", 'bot-message');
+    addComment("A journey of a thousand innovations begins with a single thought. Let's explore the uncharted territories of your creativity.");
+});
+</script>
+</body></html>
