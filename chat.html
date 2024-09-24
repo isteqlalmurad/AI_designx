@@ -1,0 +1,412 @@
+<html><head><base href="https://websim.ai/creation-engine/ai-round-table/" target="_blank">
+<title>AI Round Table: Project Design Group</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #F0F4F8;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #FFFFFF;
+    border-radius: 15px;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+h1 { 
+    color: #2C3E50;
+    text-align: center;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.chat-box {
+    background-color: #F9FAFB;
+    border-radius: 10px;
+    padding: 15px;
+    height: 500px;
+    overflow-y: auto;
+    border: 1px solid #E5E7EB;
+}
+
+.message {
+    display: flex;
+    margin-bottom: 15px;
+    align-items: flex-start;
+}
+
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+    object-fit: cover;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.message-content {
+    background-color: #EBF5FB;
+    padding: 10px 15px;
+    border-radius: 18px;
+    max-width: calc(100% - 60px);
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.user-message .message-content {
+    background-color: #D5F5E3;
+    margin-left: auto;
+    order: 1;
+}
+.spike-message .message-content {
+    background-color: #FADBD8; /* Light red color for Spike's messages */
+}
+
+.user-message .avatar {
+    order: 2;
+    margin-left: 10px;
+    margin-right: 0;
+}
+
+.sender-name {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #34495E;
+}
+
+.input-container {
+    position: relative;
+    margin-top: 20px;
+}
+
+#user-input {
+    width: calc(100% - 30px);
+    padding: 15px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    background-color: #F0F4F8;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+#user-input:focus {
+    outline: none;
+    box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 3px rgba(66, 153, 225, 0.5);
+}
+
+#send-button {
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #3498DB;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 20px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease;
+}
+
+#send-button:hover {
+    background-color: #2980B9;
+}
+
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+.creative-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: 0.1;
+    pointer-events: none;
+}
+
+.done-button {
+    display: block;
+    margin: 20px auto 0;
+    padding: 10px 20px;
+    background-color: #2ECC71;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.done-button:hover {
+    background-color: #27AE60;
+}
+
+</style>
+</head>
+<body>
+<div class="creative-bg">
+    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+            <pattern id="pattern1" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                <circle cx="20" cy="20" r="2" fill="#3498DB" />
+            </pattern>
+            <pattern id="pattern2" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                <path d="M0 0L30 30M30 0L0 30" stroke="#2ECC71" stroke-width="1" />
+            </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#pattern1)" />
+        <rect width="100%" height="100%" fill="url(#pattern2)" />
+    </svg>
+</div>
+
+<div class="container">
+    <h1>AI Round Table: Project Design Group</h1>
+    
+    <div class="chat-box" id="chat-box" aria-live="polite"></div>
+    <div class="input-container">
+        <label for="user-input" class="sr-only">Type your message</label>
+        <input type="text" id="user-input" placeholder="Type your message..." aria-label="Type your message">
+        <button id="send-button" aria-label="Send message">➤</button>
+    </div>
+    <button id="done-button" class="done-button">Finish Brief</button>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+<script>
+const chatBox = document.getElementById('chat-box');
+const userInput = document.getElementById('user-input');
+const sendButton = document.getElementById('send-button');
+const doneButton = document.getElementById('done-button');
+
+// Initialize Showdown converter
+const converter = new showdown.Converter();
+
+const key1 = "sk-proj-IjbnbvKdX6QNWEeONkMomf5Bbk2JIdI5gnflfZD8iBQ13sd5_Gd";
+const key2 = "fUOWYk_T3BlbkFJbR2HjOD6gNlqutM0Mlba0szn9u9cLL1Nuqm9axLl-O6veJ06WvV5pP5MUA" 
+
+const OPENAI_API_KEY = key1 + key2;
+
+
+
+const teamMembers = {
+    'Don': 'file:///Users/murad/Downloads/don.webp',
+    'George': 'file:///Users/murad/Downloads/george.webp',
+    'Jessica': 'file:///Users/murad/Downloads/jessica.webp',
+    'Spike': 'file:///Users/murad/Downloads/spike.webp'
+};
+let currentSpeaker = 'Don';
+let projectInfoDocument = {};
+let conversationHistory = [];
+let currentStage = 1;
+
+function addMessage(sender, message, isUser = false) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${isUser ? 'user-message' : ''}`;
+    if (sender === 'Spike') {
+        messageDiv.className += ' spike-message';
+    }
+    
+    // Convert Markdown to HTML for bot messages
+    const formattedMessage = isUser ? message : converter.makeHtml(message);
+    
+    messageDiv.innerHTML = `
+        <img src="${isUser ? 'file:///Users/murad/Downloads/user.webp' : teamMembers[sender]}" alt="${sender}" class="avatar">
+        <div class="message-content">
+            ${!isUser ? `<div class="sender-name">${sender}</div>` : ''}
+            ${formattedMessage}
+        </div>
+    `;
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+}
+
+async function getAIResponse(sender, userMessage) {
+    try {
+        let systemPrompt = "";
+        switch(sender) {
+            case 'Spike':
+                systemPrompt = `You are Spike, a lateral thinker in an AI Round Table project design group. Think laterally, ask "Why?" repeatedly, use analogies, challenge assumptions, take on different roles, use the SCAMPER method, make provocative statements, and think from a competitive perspective. Your goal is to help the user create a good project brief by offering unique perspectives. Respond in 300 characters or less unless asked for more detail.`;
+                break;
+            case 'Don':
+                systemPrompt = `You are Don, the Creative Director in an AI Round Table project design group. Your role is to ask probing questions to the user to help create a comprehensive project brief. Avoid static questions and adapt based on the user's responses. Ask follow-up questions when necessary. Your goal is to extract all necessary information for project brief find answers to these questions:",
+    
+    "What problem are you trying to solve or what opportunity are you aiming to capitalize on?",
+                "What role do you want us to play in helping you?",
+    "Who will benefit from this?",
+    "What is the key result we want?",
+    "What other information might help produce a better result?",
+    "What needs to be communicated or reinforced?",
+    "Are there any restrictions or considerations? [budget, timeframe, etc.]",
+    "List or attach any object, analogy, etc. to help illustrate the nature of the brief". ask questions one at a time. Respond in less than 300 characters  unless asked for more detail.`;
+                break;
+            case 'Jessica':
+                systemPrompt = `You are Jessica, a designer in an AI Round Table project design group. Create order out of chaos with simple, clear, bold, and easy-to-use solutions. Focus on impact, communication, and persuasion. Use the EAST Framework. Your goal is to help refine the project brief by offering design perspectives. Respond in 300 characters or less unless asked for more detail.`;
+                break;
+            case 'George':
+                systemPrompt = `You are George, an artist in an AI Round Table project design group. Create chaos out of order with bold, shocking ideas that make people rethink their views. Focus on impact, communication, and persuasion. Avoid conventional solutions. Your goal is to add creative flair to the project brief. Respond in 300 characters or less unless asked for more detail.`;
+                break;
+        }
+
+        conversationHistory.push({role: "user", content: userMessage});
+        
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: "gpt-4o",
+            messages: [
+                {role: "system", content: systemPrompt},
+                ...conversationHistory
+            ]
+        }, {
+            headers: {
+                'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const aiMessage = response.data.choices[0].message.content;
+        conversationHistory.push({role: "assistant", content: aiMessage});
+        return aiMessage;
+    } catch (error) {
+        console.error('Error:', error);
+        return "I'm sorry, I couldn't process that request.";
+    }
+}
+
+function updateProjectInfoDocument(userInput) {
+    projectInfoDocument.ideas = projectInfoDocument.ideas || [];
+    projectInfoDocument.ideas.push(userInput);
+}
+async function generateProjectBrief() {
+    const briefPrompt = `Based on the following conversation and ideas, create a concise project brief:
+    ${conversationHistory.map(msg => `${msg.role}: ${msg.content}`).join('\n')}`;
+    
+    try {
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+            model: "gpt-4o",
+            messages: [
+                {role: "system", content: "You are an expert at creating concise, clear project briefs based on conversations."},
+                {role: "user", content: briefPrompt}
+            ]
+        }, {
+            headers: {
+                'Authorization': `Bearer ${OPENAI_API_KEY}`,
+                'Content-Type': 'application/json'
+            }
+        });
+
+        return response.data.choices[0].message.content;
+    } catch (error) {
+        console.error('Error generating project brief:', error);
+        return "I'm sorry, I couldn't generate the project brief at this time.";
+    }
+}
+
+async function handleDone() {
+    currentStage = 2;
+    addMessage('Don', "Great! We've gathered enough information. Let me summarize our project brief.");
+    
+    const projectBrief = await generateProjectBrief();
+    addMessage('Don', `Here's our project brief:\n\n${projectBrief}\n\nNow, let's hear from Spike. What are your thoughts on this project brief?`);
+    
+    const spikeResponse = await getAIResponse('Spike', "Please provide your unique perspective on the project brief we've created.");
+    addMessage('Spike', spikeResponse);
+    
+    doneButton.style.display = 'none';
+}
+
+doneButton.addEventListener('click', handleDone);
+
+async function handleUserInput() {
+    const message = userInput.value.trim();
+    if (message) {
+        addMessage('You', message, true);
+        updateProjectInfoDocument(message);
+        
+        const lowerCaseMessage = message.toLowerCase();
+        
+        // Enhanced regular expression to match more variations of "spike"
+        const spikeRegex = /\b(?:spike|spyke|spk)(?:'?s)?(?:[!?.,;:\s]|\b)|@spike/i;
+        
+        if (lowerCaseMessage === "/done") {
+            await handleDone();
+        } else {
+            let donResponse, spikeResponse;
+            
+            if (spikeRegex.test(lowerCaseMessage)) {
+                // If "spike" (or its variations) is mentioned anywhere in the message, get Spike's response
+                spikeResponse = await getAIResponse('Spike', message);
+                addMessage('Spike', spikeResponse);
+                
+                // Optionally, get Don's response as well
+                donResponse = await getAIResponse('Don', message + "\n" + spikeResponse);
+                addMessage('Don', donResponse);
+            } else {
+                // If "spike" is not mentioned, proceed with the usual flow
+                donResponse = await getAIResponse('Don', message);
+                addMessage('Don', donResponse);
+                
+                // Random chance for Spike to chime in
+                if (Math.random() < 0.2) {
+                    spikeResponse = await getAIResponse('Spike', message + "\n" + donResponse);
+                    addMessage('Spike', spikeResponse);
+                }
+            }
+        }
+        
+        userInput.value = '';
+    }
+}
+
+sendButton.addEventListener('click', handleUserInput);
+userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+        handleUserInput();
+    }
+});
+
+// Function to get the user's name from the URL
+function getUserName() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return urlParams.get('name') || 'there';
+}
+
+// Function to send initial 'hi' message
+async function sendInitialMessage() {
+    const userName = getUserName();
+    const initialMessage = `Hi ${userName}! Welcome to our project brief session. Let's start by discussing the main goal of your project. What problem are you trying to solve or what opportunity are you aiming to capitalize on?`;
+    addMessage('Don', initialMessage);
+    
+    // Add the initial message to the conversation history
+    conversationHistory.push({role: "assistant", content: initialMessage});
+}
+
+// Call sendInitialMessage when the page loads
+window.addEventListener('load', sendInitialMessage);
+
+</script>
+</body>
+</html>

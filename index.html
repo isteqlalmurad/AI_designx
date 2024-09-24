@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to AI Round Table: Project Design Group</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #F0F4F8;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #FFFFFF;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 { 
+            color: #2C3E50;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        .welcome-content {
+            background-color: #F9FAFB;
+            border-radius: 10px;
+            padding: 15px;
+            border: 1px solid #E5E7EB;
+        }
+
+        .team-members {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .team-member {
+            text-align: center;
+            width: 120px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .team-member img {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .team-member:hover img {
+            transform: scale(1.1);
+        }
+
+        .team-member p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        #name-input {
+            width: calc(100% - 30px);
+            padding: 15px;
+            border: none;
+            border-radius: 25px;
+            font-size: 16px;
+            background-color: #F0F4F8;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+        }
+
+        #name-input:focus {
+            outline: none;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1), 0 0 0 3px rgba(66, 153, 225, 0.5);
+        }
+
+        #start-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background-color: #3498DB;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #start-button:hover {
+            background-color: #2980B9;
+        }
+
+        .creative-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.1;
+            pointer-events: none;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .modal-header img {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            margin-right: 15px;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="creative-bg">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="pattern1" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <circle cx="20" cy="20" r="2" fill="#3498DB" />
+                </pattern>
+                <pattern id="pattern2" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
+                    <path d="M0 0L30 30M30 0L0 30" stroke="#2ECC71" stroke-width="1" />
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#pattern1)" />
+            <rect width="100%" height="100%" fill="url(#pattern2)" />
+        </svg>
+    </div>
+
+    <div class="container">
+        <h1>Welcome to AI Round Table: Project Design Group</h1>
+        <div class="welcome-content">
+            <p>
+                Join our innovative AI-powered project design session! Our team of virtual experts will help you create a comprehensive project brief through engaging conversation and unique perspectives.
+            </p>
+            <p><h2>the creative team</h2> click on experts for more details:</p>
+            <div class="team-members">
+                <div class="team-member" onclick="openModal('don')">
+                    <img src="file:///Users/murad/Downloads/don.webp" alt="Don">
+                    <p><strong>Don</strong></p>
+                    <p>Creative Director</p>
+                </div>
+                <div class="team-member" onclick="openModal('spike')">
+                    <img src="file:///Users/murad/Downloads/spike.webp" alt="Spike">
+                    <p><strong>Spike</strong></p>
+                    <p>Lateral Thinker</p>
+                </div>
+                <div class="team-member" onclick="openModal('jessica')">
+                    <img src="file:///Users/murad/Downloads/jessica.webp" alt="Jessica">
+                    <p><strong>Jessica</strong></p>
+                    <p>Designer</p>
+                </div>
+                <div class="team-member" onclick="openModal('george')">
+                    <img src="file:///Users/murad/Downloads/george.webp" alt="George">
+                    <p><strong>George</strong></p>
+                    <p>Artist</p>
+                </div>
+            </div>
+            <p>To get started, please enter your name:</p>
+            <input type="text" id="name-input" placeholder="Your name" required>
+            <button id="start-button">Start Project Brief Session</button>
+        </div>
+    </div>
+
+    <div id="characterModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <div class="modal-header">
+                <img id="modalImage" src="" alt="">
+                <h2 id="modalName"></h2>
+            </div>
+            <p id="modalDescription"></p>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById("characterModal");
+        const span = document.getElementsByClassName("close")[0];
+        const modalImage = document.getElementById("modalImage");
+        const modalName = document.getElementById("modalName");
+        const modalDescription = document.getElementById("modalDescription");
+
+        const characters = {
+            don: {
+                name: "Don",
+                role: "Creative Director",
+                image: "file:///Users/murad/Downloads/don.webp",
+                description: "Don is the Creative Director who guides the conversation. He asks probing questions to help create a comprehensive project brief, adapting based on your responses and ensuring all necessary information is extracted."
+            },
+            spike: {
+                name: "Spike",
+                role: "Lateral Thinker",
+                image: "file:///Users/murad/Downloads/spike.webp",
+                description: "Spike is a lateral thinker who offers unique insights. He challenges assumptions, uses analogies, and employs various creative thinking techniques to help you approach your project from new angles."
+            },
+            jessica: {
+                name: "Jessica",
+                role: "Designer",
+                image: "file:///Users/murad/Downloads/jessica.webp",
+                description: "Jessica is a designer focused on creating order out of chaos. She offers simple, clear, and bold solutions, emphasizing impact, communication, and persuasion in her approach to refining your project brief."
+            },
+            george: {
+                name: "George",
+                role: "Artist",
+                image: "file:///Users/murad/Downloads/george.webp",
+                description: "George is an artist who brings creative flair to the project. He creates chaos out of order with bold, shocking ideas that challenge conventional thinking and add a unique artistic perspective to your project brief."
+            }
+        };
+
+        function openModal(character) {
+            const char = characters[character];
+            modalImage.src = char.image;
+            modalName.textContent = `${char.name} - ${char.role}`;
+            modalDescription.textContent = char.description;
+            modal.style.display = "block";
+        }
+
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        document.getElementById('start-button').addEventListener('click', function() {
+            const name = document.getElementById('name-input').value.trim();
+            if (name) {
+                window.location.href = `chat.html?name=${encodeURIComponent(name)}`;
+            } else {
+                alert('Please enter your name before starting.');
+            }
+        });
+    </script>
+</body>
+</html>
