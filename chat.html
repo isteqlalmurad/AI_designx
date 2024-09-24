@@ -214,10 +214,10 @@ const OPENAI_API_KEY = key1 + key2;
 
 
 const teamMembers = {
-    'Don': '/don.webp',
-    'George': '/george.webp',
-    'Jessica': '/jessica.webp',
-    'Spike': '/spike.webp'
+    'Don': './don.webp',
+    'George': './george.webp',
+    'Jessica': './jessica.webp',
+    'Spike': 'spike.webp'
 };
 let currentSpeaker = 'Don';
 let projectInfoDocument = {};
@@ -235,7 +235,7 @@ function addMessage(sender, message, isUser = false) {
     const formattedMessage = isUser ? message : converter.makeHtml(message);
     
     messageDiv.innerHTML = `
-        <img src="${isUser ? 'file:///Users/murad/Downloads/user.webp' : teamMembers[sender]}" alt="${sender}" class="avatar">
+        <img src="${isUser ? './user.webp' : teamMembers[sender]}" alt="${sender}" class="avatar">
         <div class="message-content">
             ${!isUser ? `<div class="sender-name">${sender}</div>` : ''}
             ${formattedMessage}
